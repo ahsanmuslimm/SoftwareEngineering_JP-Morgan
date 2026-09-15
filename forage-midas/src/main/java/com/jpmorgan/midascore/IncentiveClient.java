@@ -2,6 +2,7 @@ package com.jpmorgan.midascore;
 
 import com.jpmorgan.midascore.domain.Incentive;
 import com.jpmorgan.midascore.domain.Transaction;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -12,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
  * to compute a reward amount for each valid transaction.
  *
  * API Contract:
- *   POST http://localhost:8080/incentive
+ *   POST ${incentive.api.url} (configured in application.yml)
  *   Request body:  JSON-serialized Transaction object
  *   Response body: { "amount": <double> }  where amount >= 0
  *
@@ -32,8 +33,9 @@ public class IncentiveClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    /** Base URL of the externally-hosted Incentive API. */
-    private static final String INCENTIVE_URL = "http://localhost:8080/incentive";
+    /** Base URL of the externally-hosted Incentive API - injected from application.yml */
+    @Value("${incentive.api.url}")
+    private String incentiveUrl;
 
     /**
      * POST the transaction to the Incentive API and return the incentive amount.
@@ -42,6 +44,6 @@ public class IncentiveClient {
      * @return Incentive DTO containing the reward amount (>= 0)
      */
     public Incentive getIncentive(Transaction transaction) {
-        return restTemplate.postForObject(INCENTIVE_URL, transaction, Incentive.class);
+        return restTemplate.postForObject(incentiveUrl, transaction, Incentive.class);
     }
 }
