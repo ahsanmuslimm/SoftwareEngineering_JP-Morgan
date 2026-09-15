@@ -1,0 +1,171 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Midas Core — application-prod.yml (Production Profile)
+# Activated by: spring.profiles.active=prod (set via environment or docker-compose)
+# Database: PostgreSQL (as per UP-5 requirements)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# M2 — Kafka topic name (inherited from application.yml)
+general:
+  kafka-topic: trader-updates
+
+# M4 — Incentive API endpoint (should point to production instance)
+incentive:
+  api:
+    url: http://incentive-api.internal:8080/incentive
+
+# M5 — REST API port (production may use reverse proxy at 80/443, but keep 33400 internally)
+server:
+  port: 33400
+  servlet:
+    context-path: /
+
+# M3 — PostgreSQL Database (replaces H2)
+spring:
+  datasource:
+    # PostgreSQL connection string (environment variables injected via docker-compose or CI/CD)
+    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:midas}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER:midas_user}
+    password: ${DB_PASSWORD:midas_secure_password_2026}
+    
+    # Connection pooling (HikariCP auto-configured by Spring Boot)
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+  
+  jpa:
+    # PostgreSQL dialect for Hibernate
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      # In production, use 'validate' — never auto-create/drop tables
+      # Run Flyway or Liquibase migrations separately before deployment
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 20
+          fetch_size: 50
+        order_inserts: true
+        order_updates: true
+  
+  # Kafka configuration (same as default, but point to production broker if different)
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    consumer:
+      group-id: midas-core-prod
+      max-poll-records: 100
+      session-timeout-ms: 30000
+    producer:
+      acks: all
+      retries: 3
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UP-3 — Spring Security Configuration
+# ─────────────────────────────────────────────────────────────────────────────
+security:
+  api-key: ${MIDAS_API_KEY:midas-dev-key-2026}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UP-2 — Resilience4j Configuration (same as dev)
+# ─────────────────────────────────────────────────────────────────────────────
+resilience4j:
+  circuitbreaker:
+    instances:
+      incentiveApi:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+  retry:
+    instances:
+      incentiveApi:
+        maxAttempts: 3
+        waitDuration: 500ms
+
+  timelimiter:
+    instances:
+      incentiveApi:
+        timeoutDuration: 3s
+        cancelRunningFuture: true
+
+  metrics:
+    enabled: true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UP-4 — Spring Boot Actuator (Metrics & Health Endpoints)
+# ─────────────────────────────────────────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, info
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      simple:
+        enabled: true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Logging Configuration (Production)
+# ─────────────────────────────────────────────────────────────────────────────
+logging:
+  level:
+    root: INFO
+    com.jpmorgan.midascore: INFO
+    org.springframework: WARN
+    org.hibernate: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: /var/log/midas-core/midas-core.log
+    max-size: 100MB
+    max-history: 30
+    total-size-cap: 5GB
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Application Info (shown at /actuator/info)
+# ─────────────────────────────────────────────────────────────────────────────
+info:
+  app:
+    name: Midas Core
+    description: Financial Transaction Processing Service (FFWP)
+    version: 0.0.1
+    environment: production
+  company:
+    name: JP Morgan Chase
+    division: Software Engineering
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Environment Variables Required for Production Deployment
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Database:
+#   DB_HOST             : PostgreSQL hostname (default: postgres)
+#   DB_PORT             : PostgreSQL port (default: 5432)
+#   DB_NAME             : Database name (default: midas)
+#   DB_USER             : Database username (default: midas_user)
+#   DB_PASSWORD         : Database password (MUST SET IN PRODUCTION)
+#
+# Security:
+#   MIDAS_API_KEY       : API key for /balance endpoint authentication
+#
+# Kafka:
+#   KAFKA_BOOTSTRAP_SERVERS : Kafka broker addresses (default: kafka:9092)
+#
+# Example Docker run:
+#   docker run -e SPRING_PROFILES_ACTIVE=prod \
+#              -e DB_HOST=postgres.internal \
+#              -e DB_PASSWORD=secure-password \
+#              -e MIDAS_API_KEY=production-key-2026 \
+#              midas-core:latest
+# ─────────────────────────────────────────────────────────────────────────────

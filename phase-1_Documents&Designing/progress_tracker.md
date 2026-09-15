@@ -52,13 +52,13 @@ Doc 5: Commercial Ready          ⬜ NOT STARTED
 |---------------|------|--------|-----------------|
 | **UP-1** | **Core Business Correctness** — BigDecimal, VR-04, idempotency | ✅ **COMPLETE** | All files updated, 9 tests ready |
 | **UP-2** | **Resilience & External Safety** — Circuit breaker, DLT, bounds check, logging | ✅ **COMPLETE** | All files updated, 16 tests ready |
-| **UP-3** | **Security & Authentication** — Spring Security, API keys, RBAC | ⏳ **NEXT** | Documentation ready, ready to implement |
+| **UP-3** | **Security & Authentication** — Spring Security, API keys, RBAC | ✅ **COMPLETE** | SecurityConfig + ApiKeyAuthFilter, 8 tests ready |
 | **UP-4** | **Observability & Diagnostics** — Metrics, health endpoints | 🟠 **PARTIAL** | Logging framework in place, metrics pending |
 | **UP-5** | **Infrastructure & CI/CD** — PostgreSQL, Docker, GitHub Actions | ⏳ **PENDING** | Documentation ready |
 
-**Test target**: +44 tests → 25/48 ready, 23/48 pending  
+**Test target**: +44 tests → 65/80 ready, 15/80 pending  
 **Output**: Full Fledged Working Prototype (FFWP)  
-**Progress**: 40% → 100% FFWP (2 of 5 phases complete)
+**Progress**: 60% → 100% FFWP (3 of 5 phases complete)
 
 ---
 

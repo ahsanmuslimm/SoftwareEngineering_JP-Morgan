@@ -1,0 +1,146 @@
+﻿[
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\CURRENT_FFWP_PROGRESS.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\CURRENT_STATUS_REPORT.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\docker-compose.yml"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\Dockerfile"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\EXECUTIVE_SUMMARY.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\FFWP_CERTIFICATION_FINAL.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\IMPLEMENTATION_SUMMARY.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\MIDAS_CORE_STATUS_REPORT.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\MVP_COMPLETION_CERTIFICATE.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\MVP_MANUAL_VERIFICATION.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\pom.xml"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\REMAINING_PHASES_QUICK_REFERENCE.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\services\\IncentiveApiApp.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\SESSION_COMPLETION_REPORT.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\SESSION_COMPLETION_SUMMARY.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\ApiKeyAuthFilter.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\BalanceController.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\domain\\Balance.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\domain\\Incentive.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\domain\\Transaction.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\domain\\User.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\IncentiveClient.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\KafkaConfig.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\MetricsConfiguration.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\MidasCoreApplication.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\SecurityConfig.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\TransactionKafkaListener.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\TransactionRecord.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\TransactionRecordRepository.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\TransactionService.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\java\\com\\jpmorgan\\midascore\\UserRepository.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\resources\\application.yml"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\main\\resources\\application-prod.yml"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\test\\java\\com\\jpmorgan\\midascore\\TaskFiveTests.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\test\\java\\com\\jpmorgan\\midascore\\TaskFourTests.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\test\\java\\com\\jpmorgan\\midascore\\TaskOneTests.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\test\\java\\com\\jpmorgan\\midascore\\TaskThreeTests.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\test\\java\\com\\jpmorgan\\midascore\\TaskTwoTests.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\test\\java\\com\\jpmorgan\\midascore\\UpgradeFiveTests.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\src\\test\\java\\com\\jpmorgan\\midascore\\UpgradeFourTests.java"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\target\\classes\\application.yml"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\UP-1_IMPLEMENTATION_COMPLETE.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\UP-2_IMPLEMENTATION_COMPLETE.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\UP-3_IMPLEMENTATION_COMPLETE.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\UP3_QUICK_SUMMARY.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\UP-4_IMPLEMENTATION_COMPLETE.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\UP-5_IMPLEMENTATION_COMPLETE.md"
+    },
+    {
+        "FullName":  "D:\\WORKING\\JOB_SIMS\\Software_Engineering-by JP MORGAN\\SoftwareEngineering_JP-Morgan\\forage-midas\\UPGRADE_PHASES_PROGRESS.md"
+    }
+]

@@ -102,11 +102,22 @@
         </dependency>
 
         <!-- ───────────────────────────────────────────────────── -->
-        <!-- UP-2 — Spring Boot Actuator (for metrics)             -->
+        <!-- UP-3 — Spring Security                                -->
         <!-- ───────────────────────────────────────────────────── -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>3.2.5</version>
+        </dependency>
+
+        <!-- ───────────────────────────────────────────────────── -->
+        <!-- UP-5 — PostgreSQL JDBC Driver (for production)        -->
+        <!-- ───────────────────────────────────────────────────── -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.6.0</version>
+            <scope>runtime</scope>
         </dependency>
 
     </dependencies>

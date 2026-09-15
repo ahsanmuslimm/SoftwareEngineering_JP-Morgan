@@ -1,0 +1,123 @@
+version: '3.8'
+
+# Docker Compose configuration for Midas Core — Multi-service setup
+# Services: PostgreSQL database + Midas Core application + Kafka (optional)
+# Usage: docker-compose up -d
+# Monitoring: docker-compose logs -f midas-core
+
+services:
+  # ─────────────────────────────────────────────────────────────────────────
+  # PostgreSQL 15 — Production-grade relational database for Midas Core
+  # ─────────────────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: midas-postgres
+    environment:
+      POSTGRES_DB: midas
+      POSTGRES_USER: midas_user
+      POSTGRES_PASSWORD: midas_secure_password_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      # Persist database data across container restarts
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - midas-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U midas_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Midas Core — Financial Transaction Processing Service (FFWP)
+  # ─────────────────────────────────────────────────────────────────────────
+  midas-core:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: midas-core
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # PostgreSQL configuration (production profile)
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/midas
+      SPRING_DATASOURCE_USERNAME: midas_user
+      SPRING_DATASOURCE_PASSWORD: midas_secure_password_2026
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      
+      # Kafka configuration (if using embedded Kafka, this can be left as default)
+      # For external Kafka, update KAFKA_BOOTSTRAP_SERVERS
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      
+      # Security & API Key
+      MIDAS_API_KEY: midas-dev-key-2026
+      
+      # Actuator exposure for monitoring
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,metrics,info
+    ports:
+      - "33400:33400"
+    networks:
+      - midas-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-H", "X-API-Key: midas-dev-key-2026", "http://localhost:33400/actuator/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Apache Kafka 3.1.4 — Message broker for transaction events (optional)
+  # Only needed if using external Kafka instead of embedded
+  # Uncomment below if you want a persistent Kafka broker
+  # ─────────────────────────────────────────────────────────────────────────
+  
+  # kafka:
+  #   image: confluentinc/cp-kafka:7.3.0
+  #   container_name: midas-kafka
+  #   depends_on:
+  #     - zookeeper
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+  #     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #   networks:
+  #     - midas-network
+  #   restart: unless-stopped
+  #
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper:7.3.0
+  #   container_name: midas-zookeeper
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #   networks:
+  #     - midas-network
+  #   restart: unless-stopped
+
+# ─────────────────────────────────────────────────────────────────────────
+# Volumes — Persistent storage for PostgreSQL data
+# ─────────────────────────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+    driver: local
+
+# ─────────────────────────────────────────────────────────────────────────
+# Networks — Bridge network for inter-service communication
+# ─────────────────────────────────────────────────────────────────────────
+networks:
+  midas-network:
+    driver: bridge

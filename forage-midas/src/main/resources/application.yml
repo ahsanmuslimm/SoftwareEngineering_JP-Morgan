@@ -3,6 +3,16 @@
 # All environment values are externalized here. No hard-coded values in code.
 # ─────────────────────────────────────────────────────────────────────────────
 
+# ─────────────────────────────────────────────────────────────────────────────
+# UP-3 — Spring Security Configuration (API Key Authentication)
+# ─────────────────────────────────────────────────────────────────────────────
+security:
+  api-key: ${MIDAS_API_KEY:midas-dev-key-2026}  # Override with environment variable
+
+# M2 — Kafka topic name (injected into KafkaListener via ${general.kafka-topic})
+general:
+  kafka-topic: trader-updates
+
 # M4 — External Incentive API configuration
 incentive:
   api:

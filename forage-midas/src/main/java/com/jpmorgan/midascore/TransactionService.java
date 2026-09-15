@@ -53,24 +53,32 @@ public class TransactionService {
     private final UserRepository userRepository;
     private final TransactionRecordRepository transactionRecordRepository;
     private final IncentiveClient incentiveClient;
+    private final MetricsConfiguration.MidasMetrics metrics;
 
     @Autowired
     public TransactionService(UserRepository userRepository,
                               TransactionRecordRepository transactionRecordRepository,
-                              IncentiveClient incentiveClient) {
+                              IncentiveClient incentiveClient,
+                              MetricsConfiguration.MidasMetrics metrics) {
         this.userRepository = userRepository;
         this.transactionRecordRepository = transactionRecordRepository;
         this.incentiveClient = incentiveClient;
+        this.metrics = metrics;
     }
 
     /**
      * Process a single transaction through the full pipeline:
      * Idempotency check → Validate → Enrich (Incentive API) → Update balances → Persist record.
      *
+     * UP-4: Tracks transaction metrics using MidasMetrics counters.
+     *
      * @param transaction the incoming Transaction from Kafka
      */
     @Transactional
     public void process(Transaction transaction) {
+
+        // UP-4: Increment received counter
+        metrics.incrementReceived();
 
         // Generate transactionId if not provided (for backward compatibility with MVP tests)
         String txId = transaction.getTransactionId();
@@ -82,6 +90,8 @@ public class TransactionService {
         // ─── IDEMPOTENCY CHECK (UP-1) ───────────────────────────────────────
         if (transactionRecordRepository.existsByTransactionId(txId)) {
             // Duplicate detected — silently skip (not an error)
+            log.warn("Duplicate transaction detected: id={} — rejecting", txId);
+            metrics.incrementRejected();
             return;
         }
 
@@ -89,6 +99,8 @@ public class TransactionService {
         Optional<User> senderOpt = userRepository.findById(transaction.getSenderId());
         if (senderOpt.isEmpty()) {
             // Invalid: sender does not exist → discard transaction
+            log.warn("Sender not found: id={} — rejecting transaction {}", transaction.getSenderId(), txId);
+            metrics.incrementRejected();
             return;
         }
 
@@ -96,6 +108,8 @@ public class TransactionService {
         Optional<User> recipientOpt = userRepository.findById(transaction.getRecipientId());
         if (recipientOpt.isEmpty()) {
             // Invalid: recipient does not exist → discard transaction
+            log.warn("Recipient not found: id={} — rejecting transaction {}", transaction.getRecipientId(), txId);
+            metrics.incrementRejected();
             return;
         }
 
@@ -105,12 +119,17 @@ public class TransactionService {
         // ─── VR-03: sender balance must be >= transaction amount ────────
         if (sender.getBalance().compareTo(transaction.getAmount()) < 0) {
             // Invalid: insufficient funds → discard transaction
+            log.warn("Insufficient funds: sender={} has {}, needs {} — rejecting transaction {}",
+                sender.getId(), sender.getBalance(), transaction.getAmount(), txId);
+            metrics.incrementRejected();
             return;
         }
 
         // ─── VR-04: transaction amount must be > 0 (UP-1) ───────────────
         if (transaction.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
             // Invalid: zero or negative amount → discard transaction
+            log.warn("Invalid amount: {} — rejecting transaction {}", transaction.getAmount(), txId);
+            metrics.incrementRejected();
             return;
         }
 
@@ -146,6 +165,9 @@ public class TransactionService {
                 incentiveAmount
         );
         transactionRecordRepository.save(record);
+        
+        // UP-4: Increment valid counter
+        metrics.incrementValid();
         
         log.info("Transaction processed successfully: id={}, sender={}, recipient={}, amount={}, incentive={}",
             txId, sender.getId(), recipient.getId(), transaction.getAmount(), incentiveAmount);
