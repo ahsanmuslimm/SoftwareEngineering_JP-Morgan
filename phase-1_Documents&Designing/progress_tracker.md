@@ -46,18 +46,19 @@ Doc 5: Commercial Ready          ⬜ NOT STARTED
 
 ---
 
-## ⬜ REMAINING — Post-MVP Upgrade → FFWP (Doc 4)
+## ⏳ REMAINING — Post-MVP Upgrade → FFWP (Doc 4)
 
-| Phase | What | Why |
-|-------|------|-----|
-| UP-1 | **BigDecimal migration** — replace all `double` with `BigDecimal` | `double` has floating-point precision errors (fatal for finance) |
-| UP-2 | **Idempotency** — add unique transaction ID + dedup check | Kafka redelivery currently causes double-processing |
-| UP-3 | **Circuit breaker** — Resilience4j `@CircuitBreaker` on Incentive API | If Incentive API goes down, entire pipeline crashes |
-| UP-4 | **Structured logging** — SLF4J + Micrometer metrics | Zero observability currently |
-| UP-5 | **Dead-letter queue** — handle malformed/failed Kafka messages | Bad messages currently vanish silently |
+| Upgrade Phase | What | Status | Implementation |
+|---------------|------|--------|-----------------|
+| **UP-1** | **Core Business Correctness** — BigDecimal, VR-04, idempotency | ✅ **COMPLETE** | All files updated, 9 tests ready |
+| **UP-2** | **Resilience & External Safety** — Circuit breaker, DLT, bounds check, logging | ✅ **COMPLETE** | All files updated, 16 tests ready |
+| **UP-3** | **Security & Authentication** — Spring Security, API keys, RBAC | ⏳ **NEXT** | Documentation ready, ready to implement |
+| **UP-4** | **Observability & Diagnostics** — Metrics, health endpoints | 🟠 **PARTIAL** | Logging framework in place, metrics pending |
+| **UP-5** | **Infrastructure & CI/CD** — PostgreSQL, Docker, GitHub Actions | ⏳ **PENDING** | Documentation ready |
 
-**Test target**: +44 tests, +8 acceptance criteria  
-**Output**: Full Fledged Working Prototype (FFWP)
+**Test target**: +44 tests → 25/48 ready, 23/48 pending  
+**Output**: Full Fledged Working Prototype (FFWP)  
+**Progress**: 40% → 100% FFWP (2 of 5 phases complete)
 
 ---
 

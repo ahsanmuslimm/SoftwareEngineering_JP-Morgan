@@ -3,10 +3,6 @@
 # All environment values are externalized here. No hard-coded values in code.
 # ─────────────────────────────────────────────────────────────────────────────
 
-# M2 — Kafka topic name (injected into KafkaListener via ${general.kafka-topic})
-general:
-  kafka-topic: trader-updates
-
 # M4 — External Incentive API configuration
 incentive:
   api:
@@ -32,3 +28,55 @@ spring:
     console:
       enabled: true      # Available at http://localhost:33400/h2-console during dev
       path: /h2-console
+  kafka:
+    consumer:
+      group-id: midas-core-group
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UP-2 — Resilience4j Configuration (Circuit Breaker, Retry, Timeout)
+# ─────────────────────────────────────────────────────────────────────────────
+resilience4j:
+  # Circuit Breaker for Incentive API
+  circuitbreaker:
+    instances:
+      incentiveApi:
+        registerHealthIndicator: true
+        slidingWindowSize: 10           # Track last 10 calls
+        failureRateThreshold: 50        # Open circuit at 50% failure rate
+        waitDurationInOpenState: 10s    # Try recovery after 10 seconds
+        permittedNumberOfCallsInHalfOpenState: 3  # Allow 3 test calls in half-open state
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+  # Retry configuration for Incentive API
+  retry:
+    instances:
+      incentiveApi:
+        maxAttempts: 3                  # Try 3 times total
+        waitDuration: 500ms             # Wait 500ms between retries
+
+  # Time Limiter for Incentive API calls
+  timelimiter:
+    instances:
+      incentiveApi:
+        timeoutDuration: 3s             # 3-second timeout per call
+        cancelRunningFuture: true
+
+  # Enable detailed metrics for monitoring
+  metrics:
+    enabled: true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UP-4 — Spring Boot Actuator (Metrics & Health Endpoints)
+# ─────────────────────────────────────────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, info
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      simple:
+        enabled: true

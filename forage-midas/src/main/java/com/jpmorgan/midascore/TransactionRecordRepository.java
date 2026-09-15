@@ -11,10 +11,19 @@ import org.springframework.stereotype.Repository;
  *
  * Used by:
  *   - TransactionService (M3) — to persist a new TransactionRecord after validation passes
+ *   - TransactionService (UP-1) — to check for duplicate transactionId (idempotency)
  *
- * All needed methods (save, findAll, count) are inherited from JpaRepository.
+ * UP-1 Addition: existsByTransactionId for duplicate detection.
  */
 @Repository
 public interface TransactionRecordRepository extends JpaRepository<TransactionRecord, Long> {
-    // All needed methods are inherited from JpaRepository<TransactionRecord, Long>
+    
+    /**
+     * Check if a transaction with the given ID has already been processed.
+     * Used for idempotency — prevents duplicate processing on Kafka redelivery.
+     *
+     * @param transactionId the unique transaction identifier
+     * @return true if a record with this transactionId exists, false otherwise
+     */
+    boolean existsByTransactionId(String transactionId);
 }

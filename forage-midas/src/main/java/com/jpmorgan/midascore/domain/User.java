@@ -1,6 +1,7 @@
 package com.jpmorgan.midascore.domain;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,13 +10,15 @@ import java.util.List;
  *
  * Each User has:
  *   - id       : String primary key (e.g. "waldorf", "wilbur")
- *   - balance  : double representing the current account balance
+ *   - balance  : BigDecimal representing the current account balance
  *
  * Relationships:
  *   - One User can be the sender of MANY TransactionRecords
  *   - One User can be the recipient of MANY TransactionRecords
  *
- * MVP Design: Uses double for balance (simple arithmetic with +/- operators)
+ * UP-1 Change: balance migrated from double → BigDecimal (PH-03)
+ *   - @Column(precision = 19, scale = 4) ensures proper DB storage
+ *   - All arithmetic must use BigDecimal.add()/subtract() — NOT +/- operators
  *
  * NOTE: The table is named "users" (not "user") because USER is a reserved
  *       keyword in H2 and most SQL databases.
@@ -30,9 +33,10 @@ public class User {
 
     /**
      * Current account balance. Updated atomically during transaction processing.
+     * precision = 19 digits total, scale = 4 decimal places.
      */
-    @Column(nullable = false)
-    private double balance;
+    @Column(nullable = false, precision = 19, scale = 4)
+    private BigDecimal balance;
 
     /**
      * Transactions where this user is the SENDER.
@@ -53,7 +57,7 @@ public class User {
     /** Required by JPA */
     public User() {}
 
-    public User(String id, double balance) {
+    public User(String id, BigDecimal balance) {
         this.id = id;
         this.balance = balance;
     }
@@ -68,11 +72,11 @@ public class User {
         this.id = id;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

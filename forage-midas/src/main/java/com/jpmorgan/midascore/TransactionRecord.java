@@ -2,26 +2,32 @@ package com.jpmorgan.midascore;
 
 import com.jpmorgan.midascore.domain.User;
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 /**
  * TransactionRecord — JPA Entity for persisted financial transactions.
  *
  * This is the database representation of a validated transaction.
- * It is created ONLY after a Transaction passes all 3 validation rules:
+ * It is created ONLY after a Transaction passes all validation rules:
  *   VR-01: senderId exists as a User
  *   VR-02: recipientId exists as a User
  *   VR-03: sender.balance >= transaction.amount
+ *   VR-04: transaction.amount > 0 (UP-1)
  *
  * IMPORTANT: This is separate from domain/Transaction.java (the Kafka DTO).
  *            DO NOT add @Entity to Transaction.java.
  *
+ * UP-1 Changes:
+ *   - amount/incentive: double → BigDecimal (PH-03 — monetary precision)
+ *   - transactionId: added for idempotency (PH-02 — deduplication)
+ *
  * Fields:
- *   - id        : Auto-generated Long primary key
- *   - sender    : Many-to-One relationship with User (the sending account)
- *   - recipient : Many-to-One relationship with User (the receiving account)
- *   - amount    : The transaction amount (as received from Kafka)
- *   - incentive : The reward amount received from the Incentive API (M4)
- *                 Defaults to 0.0 until M4 populates it.
+ *   - id            : Auto-generated Long primary key
+ *   - transactionId : UUID from original transaction, unique constraint for idempotency
+ *   - sender        : Many-to-One relationship with User (the sending account)
+ *   - recipient     : Many-to-One relationship with User (the receiving account)
+ *   - amount        : The transaction amount (BigDecimal precision-safe)
+ *   - incentive     : The reward amount from Incentive API (BigDecimal precision-safe)
  */
 @Entity
 @Table(name = "transaction_records")
@@ -31,6 +37,13 @@ public class TransactionRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * Transaction ID from the original Kafka message, used for idempotency.
+     * Unique constraint prevents duplicate processing of the same transaction.
+     */
+    @Column(unique = true, nullable = false)
+    private String transactionId;
 
     /**
      * The user sending the transaction.
@@ -54,24 +67,26 @@ public class TransactionRecord {
      * The transaction amount (from the Kafka message).
      * Deducted from sender.balance.
      * Added to recipient.balance (plus incentive).
+     * UP-1: Migrated to BigDecimal for precision safety.
      */
-    @Column(nullable = false)
-    private double amount;
+    @Column(nullable = false, precision = 19, scale = 4)
+    private BigDecimal amount;
 
     /**
      * The incentive reward amount returned by the Incentive API (M4).
      * Added ONLY to recipient.balance — never deducted from sender.
-     * Defaults to 0.0 for Task 3 (before M4 is implemented).
+     * UP-1: Migrated to BigDecimal for precision safety.
      */
-    @Column(nullable = false)
-    private double incentive = 0.0;
+    @Column(nullable = false, precision = 19, scale = 4)
+    private BigDecimal incentive = BigDecimal.ZERO;
 
     // ─── Constructors ───────────────────────────────────────────────────────
 
     /** Required by JPA */
     public TransactionRecord() {}
 
-    public TransactionRecord(User sender, User recipient, double amount, double incentive) {
+    public TransactionRecord(String transactionId, User sender, User recipient, BigDecimal amount, BigDecimal incentive) {
+        this.transactionId = transactionId;
         this.sender = sender;
         this.recipient = recipient;
         this.amount = amount;
@@ -82,6 +97,14 @@ public class TransactionRecord {
 
     public Long getId() {
         return id;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 
     public User getSender() {
@@ -100,25 +123,26 @@ public class TransactionRecord {
         this.recipient = recipient;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public double getIncentive() {
+    public BigDecimal getIncentive() {
         return incentive;
     }
 
-    public void setIncentive(double incentive) {
+    public void setIncentive(BigDecimal incentive) {
         this.incentive = incentive;
     }
 
     @Override
     public String toString() {
         return "TransactionRecord{id=" + id
+                + ", transactionId='" + transactionId + "'"
                 + ", sender=" + (sender != null ? sender.getId() : "null")
                 + ", recipient=" + (recipient != null ? recipient.getId() : "null")
                 + ", amount=" + amount

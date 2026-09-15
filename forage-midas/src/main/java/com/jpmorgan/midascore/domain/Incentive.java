@@ -1,5 +1,7 @@
 package com.jpmorgan.midascore.domain;
 
+import java.math.BigDecimal;
+
 /**
  * Incentive — DTO for the Incentive API response.
  *
@@ -9,7 +11,9 @@ package com.jpmorgan.midascore.domain;
  *
  * API Contract:
  *   Request:  JSON Transaction object  → { senderId, recipientId, amount }
- *   Response: JSON Incentive object    → { "amount": <double> }
+ *   Response: JSON Incentive object    → { "amount": <BigDecimal> }
+ *
+ * UP-1 Change: amount migrated from double → BigDecimal (PH-03)
  *
  * Rules:
  *   - amount is always >= 0.0
@@ -19,24 +23,24 @@ package com.jpmorgan.midascore.domain;
 public class Incentive {
 
     /** The incentive reward amount returned by the Incentive API. Always >= 0. */
-    private double amount;
+    private BigDecimal amount;
 
     // ─── Constructors ───────────────────────────────────────────────────────
 
     /** Required for JSON deserialization by RestTemplate */
     public Incentive() {}
 
-    public Incentive(double amount) {
+    public Incentive(BigDecimal amount) {
         this.amount = amount;
     }
 
     // ─── Getters & Setters ──────────────────────────────────────────────────
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
