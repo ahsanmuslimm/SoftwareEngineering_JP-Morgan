@@ -1,7 +1,5 @@
 package com.jpmorgan.midascore.domain;
 
-import java.math.BigDecimal;
-
 /**
  * Transaction — Incoming Kafka message DTO.
  *
@@ -12,35 +10,33 @@ import java.math.BigDecimal;
  * IMPORTANT: DO NOT add @Entity to this class. It is a DTO only.
  *            The persisted form is TransactionRecord.
  *
- * UP-1 Changes:
- *   - amount: double → BigDecimal (PH-03 — monetary precision)
- *   - transactionId: added for idempotency (PH-02 — deduplication on Kafka redelivery)
+ * MVP Design: Uses double for amount (simple arithmetic with +/- operators)
  *
  * Fields:
  *   - transactionId : UUID assigned by the producer, used for idempotency
  *   - senderId      : ID of the user initiating the transaction
  *   - recipientId   : ID of the user receiving the transaction
- *   - amount        : The transaction amount (BigDecimal — precision safe)
+ *   - amount        : The transaction amount (double — MVP precision)
  */
 public class Transaction {
 
     private String transactionId;
     private String senderId;
     private String recipientId;
-    private BigDecimal amount;
+    private double amount;
 
     // ─── Constructors ───────────────────────────────────────────────────────
 
     /** Required for JSON deserialization */
     public Transaction() {}
 
-    public Transaction(String senderId, String recipientId, BigDecimal amount) {
+    public Transaction(String senderId, String recipientId, double amount) {
         this.senderId = senderId;
         this.recipientId = recipientId;
         this.amount = amount;
     }
 
-    public Transaction(String transactionId, String senderId, String recipientId, BigDecimal amount) {
+    public Transaction(String transactionId, String senderId, String recipientId, double amount) {
         this.transactionId = transactionId;
         this.senderId = senderId;
         this.recipientId = recipientId;
@@ -73,11 +69,11 @@ public class Transaction {
         this.recipientId = recipientId;
     }
 
-    public BigDecimal getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
