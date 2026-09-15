@@ -1,0 +1,29 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Midas Core — application.yml
+# All environment values are externalized here. No hard-coded values in code.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# M2 — Kafka topic name (injected into KafkaListener via ${general.kafka-topic})
+general:
+  kafka-topic: trader-updates
+
+# M5 — REST API port for BalanceController (GET /balance)
+server:
+  port: 33400
+
+# M3 — H2 In-Memory Database + JPA Configuration
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  h2:
+    console:
+      enabled: true      # Available at http://localhost:33400/h2-console during dev
+      path: /h2-console
